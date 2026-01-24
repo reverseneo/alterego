@@ -1,0 +1,98 @@
+/* --- Variables adicionales --- */
+:root {
+    --sidebar-width: 250px;
+    --card-bg: rgba(255, 255, 255, 0.03);
+}
+
+.dashboard-body {
+    display: block; /* Sobrescribimos el flex del login */
+    height: auto;
+    overflow-y: auto;
+}
+
+/* Layout Principal con CSS Grid */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr; /* 250px | Resto */
+    min-height: 100vh;
+}
+
+/* Sidebar Estilo */
+.sidebar {
+    background: rgba(15, 23, 42, 0.95);
+    border-right: 1px solid var(--glass-border);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.brand h3 { color: var(--text-main); margin-bottom: 3rem; }
+.accent { color: var(--primary); }
+
+.sidebar nav a {
+    display: block;
+    padding: 1rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    transition: 0.3s;
+}
+
+.sidebar nav a:hover, .sidebar nav a.active {
+    background: var(--glass-bg);
+    color: var(--primary);
+}
+
+.logout { margin-top: auto; color: #f87171 !important; }
+
+/* Main Content */
+.main-content {
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    background: var(--primary);
+    border-radius: 50%;
+}
+
+/* Tarjetas (Glassmorphism Cards) */
+.glass {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive automático */
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.number {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0.5rem 0;
+}
+
+.trend.up { color: #4ade80; font-size: 0.9rem; }
+.trend.down { color: #f87171; font-size: 0.9rem; }
+
+/* Contenedor del Gráfico */
+.chart-container {
+    height: 400px;
+    position: relative;
+}
