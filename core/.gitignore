@@ -1,0 +1,9 @@
+# Ignorar dependencias pesadas de Node
+node_modules/
+
+# Ignorar secretos y claves
+.env
+
+# Ignorar archivos de sistema
+.DS_Store
+Thumbs.db

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analíticas - Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --glass-bg: rgba(30, 41, 59, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --primary: #6366f1;
+            --secondary: #06b6d4;
+            --accent: #f43f5e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg-dark); color: var(--text-main); font-family: 'Inter', sans-serif; height: 100vh; display: flex; overflow: hidden; }
+        h1, h2, h3 { font-family: 'Outfit', sans-serif; }
+
+        /* --- SIDEBAR --- */
+        .sidebar { width: 260px; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(25px); border-right: 1px solid var(--glass-border); padding: 2rem 1.5rem; display: flex; flex-direction: column; z-index: 10; }
+        .brand { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 800; margin-bottom: 3rem; }
+        .nav-links a { display: flex; align-items: center; gap: 12px; padding: 14px; color: var(--text-muted); text-decoration: none; border-radius: 12px; margin-bottom: 8px; transition: 0.3s; font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { background: rgba(99, 102, 241, 0.15); color: white; }
+
+        /* --- MAIN CONTENT --- */
+        .main-content { flex: 1; padding: 2.5rem; overflow-y: auto; position: relative; }
+
+        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .date-picker { 
+            background: var(--glass-bg); border: 1px solid var(--glass-border); 
+            padding: 8px 16px; border-radius: 10px; display: flex; gap: 10px; align-items: center; 
+            color: var(--text-muted); cursor: pointer; font-size: 0.9rem;
+        }
+
+        /* --- GRID LAYOUT --- */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columnas */
+            grid-template-rows: auto auto;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            border-radius: 24px; padding: 1.5rem; position: relative;
+            backdrop-filter: blur(16px); display: flex; flex-direction: column;
+        }
+
+        /* Span 2 columnas para gráficos anchos */
+        .wide { grid-column: span 2; }
+        .tall { grid-row: span 2; }
+
+        .card-title { font-size: 1.1rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .badge { font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,0.05); color: var(--text-muted); }
+
+        /* Contenedores de Gráficos */
+        .chart-container { position: relative; flex: 1; min-height: 200px; display: flex; align-items: center; justify-content: center; }
+        
+        /* --- HEATMAP (Github Style) --- */
+        .heatmap-grid {
+            display: grid; grid-template-columns: repeat(20, 1fr); gap: 4px;
+            margin-top: 10px;
+        }
+        .heat-box {
+            width: 100%; aspect-ratio: 1; border-radius: 4px; background: rgba(255,255,255,0.05);
+            transition: 0.2s;
+        }
+        .heat-box:hover { transform: scale(1.2); z-index: 2; border: 1px solid white; }
+        /* Niveles de intensidad */
+        .l-1 { background: rgba(99, 102, 241, 0.3); }
+        .l-2 { background: rgba(99, 102, 241, 0.6); }
+        .l-3 { background: rgba(99, 102, 241, 1); box-shadow: 0 0 10px var(--primary); }
+
+        /* --- STATS MINI --- */
+        .stat-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .stat-item:last-child { border: none; margin: 0; padding: 0; }
+        .stat-val { font-weight: 700; font-family: 'Outfit'; }
+
+    </style>
+</head>
+<body>
+
+    <div style="position: absolute; filter: blur(150px); z-index: -1; opacity: 0.4; top: -10%; left: 30%; width: 600px; height: 600px; background: #06b6d4;"></div>
+    <div style="position: absolute; filter: blur(150px); z-index: -1; opacity: 0.4; bottom: 0%; right: 0%; width: 500px; height: 500px; background: #f43f5e;"></div>
+
+    <aside class="sidebar">
+        <div class="brand"><i class="ri-code-s-slash-line" style="color:var(--primary)"></i> INDIGO.dev</div>
+        <nav class="nav-links">
+            <a href="dashboard.html"><i class="ri-dashboard-line"></i> Dashboard</a>
+            <a href="catalog.html"><i class="ri-store-2-line"></i> Tienda</a>
+            <a href="analytics.html" class="active"><i class="ri-pie-chart-2-line"></i> Analíticas</a> <a href="users.html"><i class="ri-user-3-line"></i> Usuarios</a>
+            <a href="settings.html"><i class="ri-settings-4-line"></i> Configuración</a>
+            <a href="index.html" style="margin-top: auto; color: #ef4444"><i class="ri-logout-box-r-line"></i> Salir</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        
+        <div class="header-bar">
+            <div>
+                <h1 style="font-size: 2rem; margin-bottom: 5px;">Reporte de Datos</h1>
+                <p style="color: var(--text-muted);">Métricas de rendimiento del sistema</p>
+            </div>
+            <div class="date-picker">
+                <i class="ri-calendar-line"></i> <span>Últimos 30 días</span> <i class="ri-arrow-down-s-line"></i>
+            </div>
+        </div>
+
+        <div class="analytics-grid">
+            
+            <div class="card wide">
+                <div class="card-title">
+                    Ingresos por Categoría
+                    <span class="badge">Anual</span>
+                </div>
+                <div class="chart-container" style="height: 250px;">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Health Score</div>
+                <div class="chart-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+                <div style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: var(--secondary);">
+                    <i class="ri-shield-check-line"></i> Sistema Optimizado
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Dispositivos</div>
+                <div class="chart-container" style="position: relative;">
+                    <canvas id="doughnutChart"></canvas>
+                    <div style="position: absolute; text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: 800;">85%</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Móvil</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card wide">
+                <div class="card-title">
+                    Actividad de Usuarios (Heatmap)
+                    <span class="badge" style="background: var(--primary); color: white;">En tiempo real</span>
+                </div>
+                <div class="heatmap-grid" id="heatmapContainer">
+                    </div>
+                <div style="display: flex; gap: 10px; align-items: center; justify-content: flex-end; margin-top: 10px; font-size: 0.8rem; color: var(--text-muted);">
+                    <span>Menos</span>
+                    <div style="width: 10px; height: 10px; background: rgba(255,255,255,0.1); border-radius: 2px;"></div>
+                    <div style="width: 10px; height: 10px; background: rgba(99, 102, 241, 0.3); border-radius: 2px;"></div>
+                    <div style="width: 10px; height: 10px; background: rgba(99, 102, 241, 0.6); border-radius: 2px;"></div>
+                    <div style="width: 10px; height: 10px; background: #6366f1; border-radius: 2px; box-shadow: 0 0 5px #6366f1;"></div>
+                    <span>Más</span>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // CONFIGURACIÓN GLOBAL CHART.JS (Estilo Dark Mode)
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.05)';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+
+        // 1. BAR CHART (Barras Verticales)
+        new Chart(document.getElementById('barChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Hardware', 'Audio', 'Software', 'Servicios', 'Otros'],
+                datasets: [{
+                    label: 'Ventas ($)',
+                    data: [12000, 19000, 8000, 15000, 5000],
+                    backgroundColor: [
+                        'rgba(99, 102, 241, 0.8)', // Primary
+                        'rgba(6, 182, 212, 0.8)',  // Secondary
+                        'rgba(244, 63, 94, 0.8)',  // Accent
+                        'rgba(168, 85, 247, 0.8)', // Purple
+                        'rgba(255, 255, 255, 0.2)'
+                    ],
+                    borderRadius: 6,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, grid: { borderDash: [5, 5] } }, x: { grid: { display: false } } }
+            }
+        });
+
+        // 2. RADAR CHART (Spider)
+        new Chart(document.getElementById('radarChart'), {
+            type: 'radar',
+            data: {
+                labels: ['Velocidad', 'Seguridad', 'Uptime', 'SEO', 'UX'],
+                datasets: [{
+                    label: 'Score',
+                    data: [90, 95, 88, 70, 92],
+                    backgroundColor: 'rgba(6, 182, 212, 0.2)',
+                    borderColor: '#06b6d4',
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#06b6d4'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        pointLabels: { color: '#f8fafc', font: { size: 12 } },
+                        ticks: { display: false } // Ocultar números del eje
+                    }
+                }
+            }
+        });
+
+        // 3. DOUGHNUT CHART (Donut)
+        new Chart(document.getElementById('doughnutChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Móvil', 'Desktop', 'Tablet'],
+                datasets: [{
+                    data: [85, 10, 5],
+                    backgroundColor: ['#6366f1', '#1e293b', '#475569'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '75%', // Hace el agujero más grande
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // 4. GENERADOR DE HEATMAP (Simulación Visual)
+        const heatmapContainer = document.getElementById('heatmapContainer');
+        // Generamos 60 bloques (20 col x 3 filas aprox en grid auto)
+        for(let i=0; i<80; i++) {
+            const div = document.createElement('div');
+            div.className = 'heat-box';
+            
+            // Asignar intensidad aleatoria
+            const rand = Math.random();
+            if(rand > 0.85) div.classList.add('l-3');      // Alta intensidad (Brillo)
+            else if(rand > 0.6) div.classList.add('l-2'); // Media
+            else if(rand > 0.3) div.classList.add('l-1'); // Baja
+            // else queda vacía
+            
+            // Animación staggered (uno por uno)
+            div.style.animation = `fadeIn 0.5s ease forwards ${i * 10}ms`;
+            div.style.opacity = '0';
+            
+            heatmapContainer.appendChild(div);
+        }
+
+    </script>
+
+    <style>
+        @keyframes fadeIn { to { opacity: 1; } }
+    </style>
+</body>
+</html>

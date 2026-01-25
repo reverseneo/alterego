@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #6366f1;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --sidebar-width: 260px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow: hidden; /* El scroll lo manejará el contenido principal */
+            height: 100vh;
+            display: flex;
+        }
+
+        /* --- Fondo Animado (Mismo del Login) --- */
+        .bg-shape {
+            position: absolute;
+            filter: blur(100px);
+            z-index: -1;
+            animation: float 10s infinite alternate;
+        }
+        .shape-1 { top: -10%; left: -5%; width: 500px; height: 500px; background: rgba(99, 102, 241, 0.4); }
+        .shape-2 { bottom: -10%; right: -5%; width: 400px; height: 400px; background: rgba(168, 85, 247, 0.4); animation-delay: -5s; }
+        @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(40px, 40px); } }
+
+        /* --- Sidebar (Barra Lateral) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(15, 23, 42, 0.6); /* Semi-transparente */
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--glass-border);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: white;
+        }
+        .brand i { color: var(--primary); font-size: 1.8rem; }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            transition: 0.3s;
+            font-size: 0.95rem;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(99, 102, 241, 0.15);
+            color: white;
+        }
+        .nav-links a.active i { color: var(--primary); }
+
+        .logout { margin-top: auto; color: var(--danger) !important; }
+        .logout:hover { background: rgba(239, 68, 68, 0.1) !important; }
+
+        /* --- Contenido Principal --- */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto; /* Scroll solo aquí */
+            position: relative;
+        }
+
+        /* Header Superior */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+        .search-bar {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 10px 20px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 350px;
+        }
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+            width: 100%;
+        }
+        .user-profile { display: flex; align-items: center; gap: 15px; }
+        .avatar { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--primary); }
+
+        /* Tarjetas de Estadísticas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); border-color: rgba(99, 102, 241, 0.3); }
+
+        .card-header { display: flex; justify-content: space-between; margin-bottom: 1rem; color: var(--text-muted); }
+        .card-icon { 
+            width: 40px; height: 40px; 
+            border-radius: 10px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 1.2rem;
+        }
+        .purple { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+        .blue { background: rgba(99, 102, 241, 0.2); color: #6366f1; }
+        .green { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+
+        .number { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .trend { font-size: 0.85rem; display: flex; align-items: center; gap: 5px; }
+        .trend.up { color: var(--success); }
+        .trend.down { color: var(--danger); }
+
+        /* Gráfico */
+        .chart-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            height: 400px; /* Altura controlada */
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <aside class="sidebar">
+        <div class="brand">
+            <i class="ri-code-box-line"></i>
+            <span>INDIGO<span style="color:var(--primary)">.dev</span></span>
+        </div>
+        
+        <nav class="nav-links">
+            <p style="font-size: 0.75rem; color: #64748b; margin: 0 0 10px 10px; font-weight: 600;">MENU</p>
+            <a href="#" class="active"><i class="ri-dashboard-line"></i> Dashboard</a>
+            <a href="#"><i class="ri-user-3-line"></i> Usuarios</a>
+            <a href="#"><i class="ri-pie-chart-line"></i> Analíticas</a>
+            <a href="#"><i class="ri-file-list-3-line"></i> Reportes</a>
+            
+            <p style="font-size: 0.75rem; color: #64748b; margin: 20px 0 10px 10px; font-weight: 600;">SISTEMA</p>
+            <a href="#"><i class="ri-settings-line"></i> Configuración</a>
+            <a href="#" class="logout" onclick="window.location.href='index.html'"><i class="ri-logout-box-line"></i> Salir</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div class="search-bar">
+                <i class="ri-search-line" style="color: var(--text-muted)"></i>
+                <input type="text" placeholder="Buscar en el dashboard...">
+            </div>
+            <div class="user-profile">
+                <i class="ri-notification-3-line" style="font-size: 1.2rem; cursor: pointer;"></i>
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=6366f1&color=fff&bold=true" class="avatar" alt="Avatar">
+            </div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="card">
+                <div class="card-header">
+                    <span>Visitas Totales</span>
+                    <div class="card-icon blue"><i class="ri-eye-line"></i></div>
+                </div>
+                <div class="number">24,500</div>
+                <div class="trend up"><i class="ri-arrow-up-line"></i> +12% vs mes pasado</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span>Ingresos</span>
+                    <div class="card-icon purple"><i class="ri-money-dollar-circle-line"></i></div>
+                </div>
+                <div class="number">$8,400</div>
+                <div class="trend up"><i class="ri-arrow-up-line"></i> +5% vs mes pasado</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span>Rendimiento</span>
+                    <div class="card-icon green"><i class="ri-pulse-line"></i></div>
+                </div>
+                <div class="number">98%</div>
+                <div class="trend up"><i class="ri-arrow-up-line"></i> Estable</div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h3 style="margin-bottom: 1.5rem; font-weight: 500;">Tráfico del Servidor (Tiempo Real)</h3>
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="trafficChart"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Configuración del Gráfico
+        const ctx = document.getElementById('trafficChart').getContext('2d');
+        
+        // Gradiente bonito para la línea
+        let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(99, 102, 241, 0.5)');
+        gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
+
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '23:59'],
+                datasets: [{
+                    label: 'Visitantes',
+                    data: [12, 19, 35, 25, 42, 45, 30],
+                    backgroundColor: gradient,
+                    borderColor: '#6366f1',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#6366f1',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // CLAVE para que no se deforme
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: '#94a3b8' }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#94a3b8' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

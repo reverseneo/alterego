@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #0f172a; --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08); --primary: #6366f1;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-dark); color: #f8fafc; height: 100vh; display: flex; overflow: hidden; }
+
+        .bg-shape { position: absolute; filter: blur(100px); z-index: -1; opacity: 0.5; animation: float 10s infinite; }
+        .shape-1 { top: -10%; left: -5%; width: 500px; height: 500px; background: #6366f1; }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 260px; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px);
+            border-right: 1px solid var(--glass-border); padding: 2rem 1.5rem;
+            display: flex; flex-direction: column; z-index: 10;
+        }
+        .brand { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 700; margin-bottom: 3rem; }
+        .nav-links a {
+            display: flex; align-items: center; gap: 12px; padding: 14px;
+            color: #94a3b8; text-decoration: none; border-radius: 12px; margin-bottom: 8px; transition: 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active { background: rgba(99, 102, 241, 0.15); color: white; }
+
+        /* Main */
+        .main-content { flex: 1; padding: 2rem; overflow-y: auto; position: relative; }
+        
+        .header { display: flex; justify-content: space-between; margin-bottom: 2rem; align-items: center; }
+        .search { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 10px 20px; border-radius: 50px; width: 300px; display: flex; gap: 10px; color: #94a3b8; }
+        .search input { background: transparent; border: none; outline: none; color: white; width: 100%; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .card { background: var(--glass-bg); padding: 1.5rem; border-radius: 20px; border: 1px solid var(--glass-border); }
+        .card h3 { color: #94a3b8; font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .card .num { font-size: 2rem; font-weight: 700; }
+        
+        .chart-box { background: var(--glass-bg); padding: 1.5rem; border-radius: 20px; border: 1px solid var(--glass-border); height: 400px; position: relative; }
+        
+        @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(30px, 30px); } }
+    </style>
+</head>
+<body>
+    <div class="bg-shape shape-1"></div>
+
+    <aside class="sidebar">
+        <div class="brand"><i class="ri-code-s-slash-line" style="color:var(--primary)"></i> INDIGO.dev</div>
+        <nav class="nav-links">
+            <a href="dashboard.html" class="active"><i class="ri-dashboard-line"></i> Dashboard</a>
+            <a href="catalog.html"><i class="ri-store-2-line"></i> Catálogo</a>
+            <a href="#"><i class="ri-user-3-line"></i> Clientes</a>
+            <a href="index.html" style="margin-top: auto; color: #ef4444"><i class="ri-logout-box-r-line"></i> Salir</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="header">
+            <h2>Resumen General</h2>
+            <div class="search"><i class="ri-search-line"></i><input type="text" placeholder="Buscar..."></div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="card">
+                <h3>Visitas Totales</h3>
+                <div class="num">24,500</div>
+                <div style="color: #22c55e; font-size: 0.8rem; margin-top: 5px;">▲ +12% vs mes pasado</div>
+            </div>
+            <div class="card">
+                <h3>Ingresos</h3>
+                <div class="num">$8,400</div>
+                <div style="color: #22c55e; font-size: 0.8rem; margin-top: 5px;">▲ +5% vs mes pasado</div>
+            </div>
+            <div class="card">
+                <h3>Rendimiento</h3>
+                <div class="num">98%</div>
+                <div style="color: #22c55e; font-size: 0.8rem; margin-top: 5px;">● Sistema Estable</div>
+            </div>
+        </div>
+
+        <div class="chart-box">
+            <h3>Tráfico del Servidor (Tiempo Real)</h3>
+            <div style="height: 320px; width: 100%;">
+                <canvas id="trafficChart"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('trafficChart').getContext('2d');
+        let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(99, 102, 241, 0.5)');
+        gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '23:59'],
+                datasets: [{
+                    label: 'Usuarios',
+                    data: [12, 19, 35, 25, 42, 45, 30],
+                    backgroundColor: gradient,
+                    borderColor: '#6366f1',
+                    fill: true, tension: 0.4
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#94a3b8' } }, y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } } } }
+        });
+    </script>
+</body>
+</html>
