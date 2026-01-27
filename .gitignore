@@ -1,8 +1,8 @@
 # Ignorar dependencias pesadas de Node
 node_modules/
 
-# Ignorar secretos y claves
 .env
+node_modules/
 
 # Ignorar archivos de sistema
 .DS_Store
