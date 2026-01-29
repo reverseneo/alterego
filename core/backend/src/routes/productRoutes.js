@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const productController = require('../controllers/productController');
+// REVISA ESTA LÍNEA:
+const { createProduct, getProducts, deleteProduct, getStats } = require('../controllers/productController');
 
-// Definimos las rutas
-router.get('/', productController.getProducts);   // GET /api/products
-router.post('/', productController.createProduct); // POST /api/products
-
-// NUEVA RUTA: Recibe el ID del producto a borrar
-router.delete('/:id', productController.deleteProduct);
+// Rutas
+router.post('/', createProduct);   // Para guardar
+router.get('/', getProducts);      // Para buscar y listar
+router.get('/stats', getStats);    // Para el dashboard
+router.delete('/:id', deleteProduct); // Para borrar
 
 module.exports = router;

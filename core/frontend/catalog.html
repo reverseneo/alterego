@@ -204,123 +204,138 @@
     </div>
 
     <script>
-        // --- CONFIGURACIÓN FULL STACK ---
-        const API_URL = 'https://api-portfolio-indigo.onrender.com/api/products';
-        const container = document.getElementById('productsGrid');
+    // --- CONFIGURACIÓN FULL STACK ---
+    // Asegúrate de que esta sea TU url de Render
+    const API_URL = 'https://api-portfolio-indigo.onrender.com/api/products';
+    const container = document.getElementById('productsGrid');
+    const searchInput = document.getElementById('searchInput'); // <--- NUEVO: Referencia al buscador
+
+    // 1. CARGAR PRODUCTOS (Con Filtro Opcional)
+    // Aceptamos un parámetro 'searchTerm' que por defecto está vacío
+    async function loadProducts(searchTerm = '') {
+        try {
+            // Si hay texto, usamos la URL con ?search=... si no, la URL normal
+            const url = searchTerm 
+                ? `${API_URL}?search=${encodeURIComponent(searchTerm)}` 
+                : API_URL;
+
+            const response = await fetch(url);
+            const products = await response.json();
+            renderGrid(products);
+        } catch (error) {
+            console.error('Error cargando productos:', error);
+            container.innerHTML = '<p style="color:#ef4444; padding:20px;">Error al conectar con el servidor backend 🔴</p>';
+        }
+    }
+
+    // --- NUEVO: ESCUCHAR EL BUSCADOR ---
+    // Cada vez que el usuario escribe, recargamos los productos con el filtro
+    searchInput.addEventListener('input', (e) => {
+        const text = e.target.value;
+        loadProducts(text);
+    });
+
+    // 2. GUARDAR PRODUCTO (POST)
+    document.getElementById('createProductForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const newProduct = {
+            name: document.getElementById('pName').value,
+            image: document.getElementById('pImage').value,
+            price: Number(document.getElementById('pPrice').value),
+            stock: Number(document.getElementById('pStock').value),
+            category: document.getElementById('pCategory').value
+        };
+
+        try {
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newProduct)
+            });
+
+            if (res.ok) {
+                alert('¡Producto Guardado en MongoDB! 🎉');
+                closeModal();
+                document.getElementById('createProductForm').reset();
+                loadProducts(); // Recargar grilla (sin filtro)
+            } else {
+                alert('Error al guardar producto');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error de conexión con la API');
+        }
+    });
+
+    // 3. ELIMINAR PRODUCTO (DELETE)
+    async function deleteProduct(id) {
+        if(!confirm('¿Estás seguro de que quieres eliminar este producto? 🗑️')) return;
+
+        try {
+            const res = await fetch(`${API_URL}/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (res.ok) {
+                // Al eliminar, recargamos manteniendo la búsqueda actual si la hay
+                loadProducts(searchInput.value); 
+            } else {
+                alert('No se pudo eliminar el producto');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error de conexión');
+        }
+    }
+
+    // 4. RENDERIZAR
+    function renderGrid(productsList) {
+        container.innerHTML = '';
         
-        // 1. CARGAR PRODUCTOS (GET)
-        async function loadProducts() {
-            try {
-                const response = await fetch(API_URL);
-                const products = await response.json();
-                renderGrid(products);
-            } catch (error) {
-                console.error('Error cargando productos:', error);
-                container.innerHTML = '<p style="color:#ef4444; padding:20px;">Error al conectar con el servidor backend 🔴</p>';
-            }
+        if(productsList.length === 0) {
+            container.innerHTML = '<p style="color:#94a3b8; padding:20px; grid-column: 1/-1;">No se encontraron productos.</p>';
+            return;
         }
 
-        // 2. GUARDAR PRODUCTO (POST)
-        document.getElementById('createProductForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const newProduct = {
-                name: document.getElementById('pName').value,
-                image: document.getElementById('pImage').value,
-                price: Number(document.getElementById('pPrice').value),
-                stock: Number(document.getElementById('pStock').value),
-                category: document.getElementById('pCategory').value
-            };
-
-            try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newProduct)
-                });
-
-                if (res.ok) {
-                    alert('¡Producto Guardado en MongoDB! 🎉');
-                    closeModal();
-                    document.getElementById('createProductForm').reset();
-                    loadProducts(); // Recargar grilla
-                } else {
-                    alert('Error al guardar producto');
-                }
-            } catch (error) {
-                console.error(error);
-                alert('Error de conexión con la API');
-            }
-        });
-
-        // 3. ELIMINAR PRODUCTO (DELETE) - NUEVO
-        async function deleteProduct(id) {
-            if(!confirm('¿Estás seguro de que quieres eliminar este producto? 🗑️')) return;
-
-            try {
-                const res = await fetch(`${API_URL}/${id}`, {
-                    method: 'DELETE'
-                });
-
-                if (res.ok) {
-                    loadProducts(); // Recargar la lista
-                } else {
-                    alert('No se pudo eliminar el producto');
-                }
-            } catch (error) {
-                console.error(error);
-                alert('Error de conexión');
-            }
-        }
-
-        // 4. RENDERIZAR (ACTUALIZADO CON BOTÓN DELETE)
-        function renderGrid(productsList) {
-            container.innerHTML = '';
-            
-            if(productsList.length === 0) {
-                container.innerHTML = '<p style="color:#94a3b8; padding:20px; grid-column: 1/-1;">No hay productos en la base de datos. ¡Agrega el primero!</p>';
-                return;
-            }
-
-            productsList.forEach((p, index) => {
-                const delay = index * 100;
-                // NOTA: Usamos p._id porque así lo devuelve MongoDB
-                container.innerHTML += `
-                    <div class="product-card" style="animation: fadeUp 0.8s backwards ${delay}ms">
-                        <div class="img-box"><img src="${p.image}" alt="${p.name}"></div>
-                        <div style="font-weight:700; margin-bottom:5px;">${p.name}</div>
-                        <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:5px;">${p.category} | Stock: ${p.stock}</div>
-                        <div class="price-row">
-                            <span class="price">$${p.price}</span>
-                            <div style="display:flex; gap: 8px;">
-                                <button class="delete-btn" onclick="deleteProduct('${p._id}')" title="Eliminar">
-                                    <i class="ri-delete-bin-line"></i>
-                                </button>
-                            </div>
+        productsList.forEach((p, index) => {
+            const delay = index * 50; // Delay más rápido para que se sienta ágil al buscar
+            container.innerHTML += `
+                <div class="product-card" style="animation: fadeUp 0.5s backwards ${delay}ms">
+                    <div class="img-box"><img src="${p.image}" alt="${p.name}"></div>
+                    <div style="font-weight:700; margin-bottom:5px;">${p.name}</div>
+                    <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:5px;">${p.category} | Stock: ${p.stock}</div>
+                    <div class="price-row">
+                        <span class="price">$${p.price}</span>
+                        <div style="display:flex; gap: 8px;">
+                            <button class="delete-btn" onclick="deleteProduct('${p._id}')" title="Eliminar">
+                                <i class="ri-delete-bin-line"></i>
+                            </button>
                         </div>
                     </div>
-                `;
-            });
-        }
+                </div>
+            `;
+        });
+    }
 
-        // --- FUNCIONES CARRUSEL Y MODAL ---
-        let currentSlide = 0;
-        const slider = document.getElementById('slider');
-        const slides = document.querySelectorAll('.slide');
+    // --- FUNCIONES CARRUSEL Y MODAL ---
+    let currentSlide = 0;
+    const slider = document.getElementById('slider');
+    const slides = document.querySelectorAll('.slide');
 
-        function moveSlide(dir) {
-            currentSlide = (currentSlide + dir + slides.length) % slides.length;
-            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
-            slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
-        }
-        setInterval(() => moveSlide(1), 6000);
+    function moveSlide(dir) {
+        currentSlide = (currentSlide + dir + slides.length) % slides.length;
+        slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+        slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
+    }
+    setInterval(() => moveSlide(1), 6000);
 
-        function openModal() { document.getElementById('productModal').classList.add('active'); }
-        function closeModal() { document.getElementById('productModal').classList.remove('active'); }
+    function openModal() { document.getElementById('productModal').classList.add('active'); }
+    function closeModal() { document.getElementById('productModal').classList.remove('active'); }
 
-        // INICIALIZAR
-        loadProducts();
-    </script>
+    // INICIALIZAR
+    loadProducts();
+</script>
     <style> @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } } </style>
 </body>
 </html>
