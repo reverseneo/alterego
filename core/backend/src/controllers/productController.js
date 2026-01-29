@@ -33,3 +33,16 @@ exports.deleteProduct = async (req, res) => {
         res.status(500).json({ error: 'Error al eliminar el producto' });
     }
 };
+
+exports.getStats = async (req, res) => {
+    try {
+        // Cuenta cuántos documentos hay en la colección 'Product'
+        const totalProducts = await Product.countDocuments();
+        
+        // Aquí podríamos agregar más lógica (ej: precio promedio, stock total, etc.)
+        
+        res.json({ total: totalProducts });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
