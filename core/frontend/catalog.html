@@ -130,7 +130,7 @@
             <div style="display: flex; gap: 15px;">
                 <div style="background: rgba(30,41,59,0.8); padding: 10px 20px; border-radius: 50px; border: 1px solid var(--glass-border); display: flex; gap: 10px; align-items: center;">
                     <i class="ri-search-line" style="color: #64748b"></i>
-                    <input type="text" placeholder="Buscar..." style="background: transparent; border: none; color: white; outline: none;">
+                    <input type="text" id="searchInput" placeholder="Buscar..." style="background: transparent; border: none; color: white; outline: none;">
                 </div>
                 <button class="btn-glow" onclick="openModal()">
                     <i class="ri-add-line"></i> Nuevo Producto
@@ -230,10 +230,12 @@
 
     // --- NUEVO: ESCUCHAR EL BUSCADOR ---
     // Cada vez que el usuario escribe, recargamos los productos con el filtro
-    searchInput.addEventListener('input', (e) => {
-        const text = e.target.value;
-        loadProducts(text);
-    });
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const text = e.target.value;
+            loadProducts(text);
+        });
+    }
 
     // 2. GUARDAR PRODUCTO (POST)
     document.getElementById('createProductForm').addEventListener('submit', async (e) => {
@@ -279,7 +281,7 @@
 
             if (res.ok) {
                 // Al eliminar, recargamos manteniendo la búsqueda actual si la hay
-                loadProducts(searchInput.value); 
+                loadProducts(searchInput ? searchInput.value : ''); 
             } else {
                 alert('No se pudo eliminar el producto');
             }
