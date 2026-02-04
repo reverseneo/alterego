@@ -180,14 +180,14 @@
         
         <nav class="nav-links">
             <p style="font-size: 0.75rem; color: #64748b; margin: 0 0 10px 10px; font-weight: 600;">MENU</p>
-            <a href="#" class="active"><i class="ri-dashboard-line"></i> Dashboard</a>
-            <a href="#"><i class="ri-user-3-line"></i> Usuarios</a>
-            <a href="#"><i class="ri-pie-chart-line"></i> Analíticas</a>
-            <a href="#"><i class="ri-file-list-3-line"></i> Reportes</a>
+            <a href="dashboard.html" class="active"><i class="ri-dashboard-line"></i> Dashboard</a>
+            <a href="catalog.html"><i class="ri-store-2-line"></i> Tienda</a>
+            <a href="clients.html"><i class="ri-briefcase-4-line"></i> Clientes</a>
+            <a href="users.html"><i class="ri-user-3-line"></i> Usuarios</a>
             
             <p style="font-size: 0.75rem; color: #64748b; margin: 20px 0 10px 10px; font-weight: 600;">SISTEMA</p>
-            <a href="#"><i class="ri-settings-line"></i> Configuración</a>
-            <a href="#" class="logout" onclick="window.location.href='index.html'"><i class="ri-logout-box-line"></i> Salir</a>
+            <a href="settings.html"><i class="ri-settings-line"></i> Configuración</a>
+            <a href="index.html" class="logout"><i class="ri-logout-box-line"></i> Salir</a>
         </nav>
     </aside>
 
@@ -206,11 +206,11 @@
         <div class="stats-grid">
             <div class="card">
                 <div class="card-header">
-                    <span>Visitas Totales</span>
-                    <div class="card-icon blue"><i class="ri-eye-line"></i></div>
+                    <span>Total Productos</span>
+                    <div class="card-icon blue"><i class="ri-store-2-line"></i></div>
                 </div>
-                <div class="number">24,500</div>
-                <div class="trend up"><i class="ri-arrow-up-line"></i> +12% vs mes pasado</div>
+                <div class="number" id="totalProducts">Cargando...</div>
+                <div class="trend up"><i class="ri-arrow-up-line"></i> Inventario Real</div>
             </div>
 
             <div class="card">
@@ -241,11 +241,13 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script src="dashboard.js"></script>
+
     <script>
-        // Configuración del Gráfico
+        // Configuración del Gráfico (Decorativo)
         const ctx = document.getElementById('trafficChart').getContext('2d');
         
-        // Gradiente bonito para la línea
         let gradient = ctx.createLinearGradient(0, 0, 0, 400);
         gradient.addColorStop(0, 'rgba(99, 102, 241, 0.5)');
         gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
@@ -268,10 +270,8 @@
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false, // CLAVE para que no se deforme
-                plugins: {
-                    legend: { display: false }
-                },
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
                 scales: {
                     y: {
                         beginAtZero: true,
