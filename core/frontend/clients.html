@@ -5,110 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clientes - Portfolio</title>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --glass-bg: rgba(30, 41, 59, 0.6);
-            --glass-header: rgba(30, 41, 59, 0.9);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --primary: #6366f1;
-            --success: #22c55e;
-            --warning: #f59e0b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --bg-dark: #0f172a; --glass-bg: rgba(30, 41, 59, 0.7);
+            --primary: #6366f1; --glass-border: rgba(255, 255, 255, 0.08);
+            --success: #22c55e; --danger: #ef4444;
         }
-        
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--bg-dark); color: var(--text-main); font-family: 'Inter', sans-serif; height: 100vh; display: flex; overflow: hidden; }
-        h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
+        body { background: var(--bg-dark); color: #f8fafc; font-family: 'Inter', sans-serif; height: 100vh; display: flex; overflow: hidden; }
+        h1, h2, h3 { font-family: 'Outfit', sans-serif; }
 
-        /* --- SIDEBAR --- */
-        .sidebar { width: 260px; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(25px); border-right: 1px solid var(--glass-border); padding: 2rem 1.5rem; display: flex; flex-direction: column; z-index: 10; }
-        .brand { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 800; margin-bottom: 3rem; }
-        .nav-links a { display: flex; align-items: center; gap: 12px; padding: 14px; color: var(--text-muted); text-decoration: none; border-radius: 12px; margin-bottom: 8px; transition: 0.3s; font-weight: 500; }
+        /* Sidebar (Igual a las otras páginas) */
+        .sidebar { width: 260px; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border-right: 1px solid var(--glass-border); padding: 2rem 1.5rem; display: flex; flex-direction: column; z-index: 10; }
+        .brand { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 700; margin-bottom: 3rem; color: white; }
+        .nav-links a { display: flex; align-items: center; gap: 12px; padding: 14px; color: #94a3b8; text-decoration: none; border-radius: 12px; margin-bottom: 8px; transition: 0.3s; }
         .nav-links a:hover, .nav-links a.active { background: rgba(99, 102, 241, 0.15); color: white; }
+        .nav-links a.active i { color: var(--primary); }
 
-        /* --- MAIN CONTENT --- */
-        .main-content { flex: 1; padding: 2.5rem; overflow-y: auto; position: relative; }
+        /* Main Content */
+        .main-content { flex: 1; padding: 2rem; overflow-y: auto; position: relative; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
         
-        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
-        .title-group h1 { font-size: 2rem; font-weight: 800; margin-bottom: 5px; }
-        .title-group p { color: var(--text-muted); }
-
-        .action-bar { display: flex; gap: 15px; }
-        .search-box { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 10px 20px; border-radius: 12px; display: flex; align-items: center; gap: 10px; width: 300px; transition: 0.3s; }
-        .search-box:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
-        .search-box input { background: transparent; border: none; color: white; outline: none; width: 100%; font-family: 'Inter'; }
-
-        .btn-new { background: white; color: #0f172a; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
-        .btn-new:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.1); }
-
-        /* --- STATS ROW --- */
-        .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 3rem; }
-        .kpi-card { background: linear-gradient(145deg, rgba(30,41,59,0.7), rgba(30,41,59,0.4)); border: 1px solid var(--glass-border); padding: 1.5rem; border-radius: 20px; position: relative; overflow: hidden; }
-        .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary); }
-        .kpi-value { font-size: 2rem; font-weight: 700; font-family: 'Outfit'; margin: 5px 0; }
-        .kpi-label { color: var(--text-muted); font-size: 0.9rem; }
+        /* Buscador y Botón */
+        .actions-bar { display: flex; gap: 15px; }
+        .search-box {
+            background: rgba(30, 41, 59, 0.8); border: 1px solid var(--glass-border);
+            padding: 10px 20px; border-radius: 50px; display: flex; align-items: center; gap: 10px; width: 300px;
+        }
+        .search-box input { background: transparent; border: none; color: white; outline: none; width: 100%; }
         
-        /* --- CLIENTS GRID --- */
-        .clients-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; padding-bottom: 2rem; }
+        .btn-primary {
+            background: var(--primary); color: white; padding: 10px 24px; border-radius: 50px;
+            border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;
+            transition: 0.3s; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(99, 102, 241, 0.5); }
 
-        .client-card {
+        /* TABLA DE CLIENTES (Estilo CRM) */
+        .table-container {
             background: var(--glass-bg); border: 1px solid var(--glass-border);
-            border-radius: 24px; padding: 1.8rem; transition: 0.3s; position: relative;
-            display: flex; flex-direction: column; gap: 1.5rem;
+            border-radius: 20px; overflow: hidden; backdrop-filter: blur(10px);
         }
-        .client-card:hover { transform: translateY(-5px); background: rgba(30, 41, 59, 0.8); border-color: rgba(99, 102, 241, 0.3); }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 1.5rem; background: rgba(15, 23, 42, 0.5); color: #94a3b8; font-weight: 500; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 1.5rem; border-bottom: 1px solid var(--glass-border); color: #e2e8f0; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: rgba(255, 255, 255, 0.02); }
 
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .company-info { display: flex; gap: 15px; align-items: center; }
-        .logo-box { 
-            width: 50px; height: 50px; border-radius: 12px; background: rgba(255,255,255,0.05); 
-            display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .company-name h3 { font-size: 1.1rem; margin-bottom: 2px; }
-        .company-name span { font-size: 0.85rem; color: var(--text-muted); }
-
-        .status-badge { 
-            padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .status-active { background: rgba(34, 197, 94, 0.1); color: var(--success); border: 1px solid rgba(34, 197, 94, 0.2); }
-        .status-pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.2); }
-
-        /* Project Info */
-        .project-section h4 { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; }
-        .progress-container { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-bottom: 5px; }
-        .progress-bar { height: 100%; border-radius: 10px; transition: width 1s ease; }
-        .blue-bar { background: var(--primary); }
-        .green-bar { background: var(--success); }
-        .orange-bar { background: var(--warning); }
+        .client-info { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(45deg, #6366f1, #a855f7); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 0.9rem; }
         
-        .progress-text { display: flex; justify-content: space-between; font-size: 0.85rem; margin-top: 5px; }
-
-        /* Footer Card */
-        .card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); }
-        .team-avatars { display: flex; padding-left: 10px; }
-        .team-avatars img { 
-            width: 30px; height: 30px; border-radius: 50%; border: 2px solid #0f172a; 
-            margin-left: -10px; transition: 0.2s; 
+        .action-btn {
+            background: transparent; border: 1px solid var(--glass-border); color: #94a3b8;
+            width: 32px; height: 32px; border-radius: 8px; cursor: pointer; transition: 0.2s;
         }
-        .team-avatars img:hover { transform: translateY(-3px); z-index: 2; }
+        .action-btn:hover { background: white; color: var(--bg-dark); }
+        .delete-btn:hover { background: var(--danger); color: white; border-color: var(--danger); }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: 0.3s; z-index: 100;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal { background: #1e293b; padding: 2.5rem; border-radius: 24px; width: 450px; border: 1px solid var(--glass-border); position: relative; }
         
-        .contact-btn { 
-            background: transparent; border: 1px solid var(--glass-border); color: var(--text-muted);
-            padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: 0.2s;
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; color: #94a3b8; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .form-group input {
+            width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #334155; border-radius: 10px; color: white; outline: none;
         }
-        .contact-btn:hover { background: rgba(255,255,255,0.1); color: white; border-color: white; }
-
+        .form-group input:focus { border-color: var(--primary); }
     </style>
 </head>
 <body>
-
-    <div style="position: absolute; filter: blur(130px); z-index: -1; opacity: 0.6; top: -10%; left: 20%; width: 600px; height: 600px; background: #4f46e5;"></div>
-    <div style="position: absolute; filter: blur(130px); z-index: -1; opacity: 0.5; bottom: -10%; right: 10%; width: 500px; height: 500px; background: #06b6d4;"></div>
 
     <aside class="sidebar">
         <div class="brand"><i class="ri-code-s-slash-line" style="color:var(--primary)"></i> INDIGO.dev</div>
@@ -123,146 +98,176 @@
     </aside>
 
     <main class="main-content">
-        
-        <div class="header-section">
-            <div class="title-group">
-                <h1>Cartera de Clientes</h1>
-                <p>Monitoreo de proyectos y relaciones comerciales</p>
+        <div class="header">
+            <div>
+                <h1>Base de Clientes</h1>
+                <p style="color: #94a3b8; margin-top: 5px;">Gestiona tus relaciones comerciales</p>
             </div>
-            <div class="action-bar">
+            <div class="actions-bar">
                 <div class="search-box">
-                    <i class="ri-search-line" style="color: var(--text-muted)"></i>
-                    <input type="text" placeholder="Buscar empresa o contacto...">
+                    <i class="ri-search-line" style="color: #64748b"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar cliente...">
                 </div>
-                <button class="btn-new"><i class="ri-add-line"></i> Nuevo Cliente</button>
+                <button class="btn-primary" onclick="openModal()">
+                    <i class="ri-user-add-line"></i> Nuevo Cliente
+                </button>
             </div>
         </div>
 
-        <div class="kpi-row">
-            <div class="kpi-card">
-                <div class="kpi-label">Ingresos Mensuales</div>
-                <div class="kpi-value">$124,500</div>
-                <div style="color: var(--success); font-size: 0.85rem;">▲ +8.2% este mes</div>
-            </div>
-            <div class="kpi-card" style="border-left-color: var(--success);"> <style>.kpi-card:nth-child(2)::before { background: var(--success); }</style>
-                <div class="kpi-label">Proyectos Activos</div>
-                <div class="kpi-value">18</div>
-                <div style="color: var(--text-muted); font-size: 0.85rem;">4 en fase final</div>
-            </div>
-            <div class="kpi-card">
-                <style>.kpi-card:nth-child(3)::before { background: var(--warning); }</style>
-                <div class="kpi-label">Pendientes de Pago</div>
-                <div class="kpi-value">3</div>
-                <div style="color: var(--warning); font-size: 0.85rem;">Requieren atención</div>
-            </div>
+        <div class="table-container">
+            <table id="clientsTable">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Dirección</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="clientsBody">
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 3rem; color: #64748b;">
+                            Cargando datos...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-
-        <div class="clients-grid" id="clientsContainer">
-            </div>
-
     </main>
 
+    <div class="modal-overlay" id="clientModal">
+        <div class="modal">
+            <button onclick="closeModal()" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 1.5rem;"><i class="ri-close-line"></i></button>
+            <h2 style="margin-bottom: 1.5rem;">Registrar Cliente</h2>
+            <form id="createClientForm">
+                <div class="form-group">
+                    <label>Nombre Completo</label>
+                    <input type="text" id="cName" required placeholder="Ej. Juan Pérez">
+                </div>
+                <div class="form-group">
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="cEmail" required placeholder="juan@empresa.com">
+                </div>
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input type="tel" id="cPhone" placeholder="+56 9 1234 5678">
+                </div>
+                <div class="form-group">
+                    <label>Dirección</label>
+                    <input type="text" id="cAddress" placeholder="Av. Siempre Viva 742">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">Guardar Cliente</button>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // DATOS DE CLIENTES
-        const clients = [
-            {
-                company: "TechFlow Inc.", industry: "Software SaaS",
-                logo: "ri-npmjs-line", color: "#E11D48",
-                project: "Rediseño Dashboard", progress: 75, status: "Activo",
-                revenue: "$12,000",
-                team: ["https://ui-avatars.com/api/?background=E11D48&color=fff&name=A", "https://ui-avatars.com/api/?background=0D9488&color=fff&name=B"]
-            },
-            {
-                company: "Global Logistics", industry: "Transporte",
-                logo: "ri-truck-line", color: "#2563EB",
-                project: "App de Rastreo GPS", progress: 40, status: "Activo",
-                revenue: "$45,000",
-                team: ["https://ui-avatars.com/api/?background=2563EB&color=fff&name=C"]
-            },
-            {
-                company: "EcoEnergy", industry: "Energía Renovable",
-                logo: "ri-leaf-line", color: "#16A34A",
-                project: "Landing Page Campaña", progress: 90, status: "Revisión",
-                revenue: "$5,500",
-                team: ["https://ui-avatars.com/api/?background=16A34A&color=fff&name=D", "https://ui-avatars.com/api/?background=9333EA&color=fff&name=E", "https://ui-avatars.com/api/?background=EA580C&color=fff&name=F"]
-            },
-            {
-                company: "Urban Arquitectos", industry: "Construcción",
-                logo: "ri-building-2-line", color: "#EA580C",
-                project: "Sistema de Planos", progress: 15, status: "Pendiente",
-                revenue: "$22,000",
-                team: ["https://ui-avatars.com/api/?background=EA580C&color=fff&name=G"]
-            },
-            {
-                company: "CryptoVault", industry: "Finanzas",
-                logo: "ri-bit-coin-line", color: "#9333EA",
-                project: "Wallet Mobile App", progress: 60, status: "Activo",
-                revenue: "$60,000",
-                team: ["https://ui-avatars.com/api/?background=9333EA&color=fff&name=H", "https://ui-avatars.com/api/?background=E11D48&color=fff&name=I"]
+        // CONFIGURACIÓN API
+        const API_URL = 'https://api-portfolio-indigo.onrender.com/api/clients'; // TU RUTA NUEVA
+        const tableBody = document.getElementById('clientsBody');
+        const searchInput = document.getElementById('searchInput');
+
+        // 1. CARGAR CLIENTES
+        async function loadClients(search = '') {
+            try {
+                const url = search ? `${API_URL}?search=${encodeURIComponent(search)}` : API_URL;
+                const res = await fetch(url);
+                const clients = await res.json();
+                renderTable(clients);
+            } catch (error) {
+                console.error('Error:', error);
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ef4444;">Error de conexión con el servidor 🔴</td></tr>';
             }
-        ];
+        }
 
-        const container = document.getElementById('clientsContainer');
-
-        clients.forEach((c, index) => {
-            // Lógica de estilos dinámica
-            let statusClass = c.status === 'Activo' ? 'status-active' : 'status-pending';
-            let progressColor = c.progress > 80 ? 'green-bar' : (c.progress < 30 ? 'orange-bar' : 'blue-bar');
+        // 2. RENDERIZAR TABLA
+        function renderTable(data) {
+            tableBody.innerHTML = '';
             
-            // Generar HTML de avatares
-            let teamHtml = c.team.map(img => `<img src="${img}" alt="Member">`).join('');
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem;">No se encontraron clientes.</td></tr>';
+                return;
+            }
 
-            // Crear Tarjeta
-            const card = document.createElement('div');
-            card.className = 'client-card';
-            card.style.animation = `slideUp 0.6s ease forwards ${index * 100}ms`;
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)'; // Estado inicial animación
+            data.forEach(client => {
+                // Crear iniciales para el avatar (Ej: Juan Perez -> JP)
+                const initials = client.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>
+                            <div class="client-info">
+                                <div class="avatar">${initials}</div>
+                                <span style="font-weight: 600;">${client.name}</span>
+                            </div>
+                        </td>
+                        <td style="color: #94a3b8;">${client.email}</td>
+                        <td>${client.phone || '-'}</td>
+                        <td style="font-size: 0.9rem;">${client.address || '-'}</td>
+                        <td>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="action-btn delete-btn" onclick="deleteClient('${client._id}')" title="Eliminar">
+                                    <i class="ri-delete-bin-line"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
 
-            card.innerHTML = `
-                <div class="card-header">
-                    <div class="company-info">
-                        <div class="logo-box" style="color: ${c.color}; border-color: ${c.color}40; background: ${c.color}10">
-                            <i class="${c.logo}"></i>
-                        </div>
-                        <div class="company-name">
-                            <h3>${c.company}</h3>
-                            <span>${c.industry}</span>
-                        </div>
-                    </div>
-                    <span class="status-badge ${statusClass}">${c.status}</span>
-                </div>
+        // 3. GUARDAR CLIENTE
+        document.getElementById('createClientForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newClient = {
+                name: document.getElementById('cName').value,
+                email: document.getElementById('cEmail').value,
+                phone: document.getElementById('cPhone').value,
+                address: document.getElementById('cAddress').value
+            };
 
-                <div class="project-section">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                        <h4>Proyecto Actual</h4>
-                        <span style="font-size:0.8rem; color:white;">${c.revenue}</span>
-                    </div>
-                    <div style="font-size:0.95rem; font-weight:500; margin-bottom:10px;">${c.project}</div>
-                    
-                    <div class="progress-container">
-                        <div class="progress-bar ${progressColor}" style="width: ${c.progress}%"></div>
-                    </div>
-                    <div class="progress-text">
-                        <span>Progreso</span>
-                        <span>${c.progress}%</span>
-                    </div>
-                </div>
-
-                <div class="card-footer">
-                    <div class="team-avatars">
-                        ${teamHtml}
-                    </div>
-                    <button class="contact-btn">Contactar</button>
-                </div>
-            `;
-            container.appendChild(card);
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newClient)
+                });
+                
+                if (res.ok) {
+                    alert('¡Cliente registrado! 💼');
+                    closeModal();
+                    document.getElementById('createClientForm').reset();
+                    loadClients();
+                } else {
+                    alert('Error: El email quizás ya existe.');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Error al guardar.');
+            }
         });
 
+        // 4. BORRAR CLIENTE
+        async function deleteClient(id) {
+            if (!confirm('¿Eliminar este cliente?')) return;
+            try {
+                await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+                loadClients(searchInput.value);
+            } catch (error) {
+                alert('No se pudo eliminar.');
+            }
+        }
+
+        // BUSCADOR EN TIEMPO REAL
+        searchInput.addEventListener('input', (e) => loadClients(e.target.value));
+
+        // MODAL
+        function openModal() { document.getElementById('clientModal').classList.add('active'); }
+        function closeModal() { document.getElementById('clientModal').classList.remove('active'); }
+
+        // INICIAR
+        loadClients();
     </script>
-    
-    <style>
-        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
-    </style>
 </body>
 </html>
