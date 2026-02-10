@@ -5,152 +5,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuarios - Portfolio</title>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --glass-bg: rgba(30, 41, 59, 0.6);
-            --glass-header: rgba(30, 41, 59, 0.9);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --primary: #6366f1;
-            --success: #22c55e;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --bg-dark: #0f172a; --glass-bg: rgba(30, 41, 59, 0.7);
+            --primary: #6366f1; --glass-border: rgba(255, 255, 255, 0.08);
+            --success: #22c55e; --danger: #ef4444; --warning: #f59e0b;
         }
-        
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--bg-dark); color: var(--text-main); font-family: 'Inter', sans-serif; height: 100vh; display: flex; overflow: hidden; }
-        h1, h2, h3, th { font-family: 'Outfit', sans-serif; }
+        body { background: var(--bg-dark); color: #f8fafc; font-family: 'Inter', sans-serif; height: 100vh; display: flex; overflow: hidden; }
+        h1, h2, h3 { font-family: 'Outfit', sans-serif; }
 
-        /* --- SIDEBAR --- */
-        .sidebar { width: 260px; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(25px); border-right: 1px solid var(--glass-border); padding: 2rem 1.5rem; display: flex; flex-direction: column; z-index: 10; }
-        .brand { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 800; margin-bottom: 3rem; }
-        .nav-links a { display: flex; align-items: center; gap: 12px; padding: 14px; color: var(--text-muted); text-decoration: none; border-radius: 12px; margin-bottom: 8px; transition: 0.3s; font-weight: 500; }
+        /* Sidebar Standard */
+        .sidebar { width: 260px; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border-right: 1px solid var(--glass-border); padding: 2rem 1.5rem; display: flex; flex-direction: column; z-index: 10; }
+        .brand { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 700; margin-bottom: 3rem; color: white; }
+        .nav-links a { display: flex; align-items: center; gap: 12px; padding: 14px; color: #94a3b8; text-decoration: none; border-radius: 12px; margin-bottom: 8px; transition: 0.3s; }
         .nav-links a:hover, .nav-links a.active { background: rgba(99, 102, 241, 0.15); color: white; }
+        .nav-links a.active i { color: var(--primary); }
 
-        /* --- MAIN CONTENT --- */
-        .main-content { flex: 1; padding: 2.5rem; overflow-y: auto; position: relative; }
+        /* Main Content */
+        .main-content { flex: 1; padding: 2rem; overflow-y: auto; position: relative; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
         
-        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .page-title h1 { font-size: 2rem; font-weight: 800; margin-bottom: 5px; }
-        .page-title p { color: var(--text-muted); }
-
-        .add-btn {
-            background: var(--primary); color: white; border: none; padding: 12px 24px;
-            border-radius: 50px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;
+        .btn-primary {
+            background: var(--primary); color: white; padding: 10px 24px; border-radius: 50px;
+            border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;
             transition: 0.3s; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
         }
-        .add-btn:hover { background: #4f46e5; transform: translateY(-2px); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(99, 102, 241, 0.5); }
 
-        /* --- FILTROS --- */
-        .filters-bar {
-            display: flex; gap: 15px; margin-bottom: 1.5rem; background: var(--glass-bg);
-            padding: 10px; border-radius: 16px; border: 1px solid var(--glass-border); width: fit-content;
-        }
-        .search-input {
-            background: transparent; border: none; color: white; outline: none; padding: 5px 10px;
-            width: 250px; font-family: 'Inter'; border-right: 1px solid var(--glass-border);
-        }
-        .filter-select {
-            background: transparent; border: none; color: var(--text-muted); outline: none; cursor: pointer; font-family: 'Inter';
-        }
-
-        /* --- DATA TABLE ESTILIZADA --- */
+        /* TABLA DE USUARIOS */
         .table-container {
             background: var(--glass-bg); border: 1px solid var(--glass-border);
-            border-radius: 24px; overflow: hidden; /* Para las esquinas redondeadas */
-            box-shadow: 0 20px 50px -10px rgba(0,0,0,0.3);
-            backdrop-filter: blur(16px);
+            border-radius: 20px; overflow: hidden; backdrop-filter: blur(10px);
         }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 1.5rem; background: rgba(15, 23, 42, 0.5); color: #94a3b8; font-weight: 500; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 1.5rem; border-bottom: 1px solid var(--glass-border); color: #e2e8f0; vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: rgba(255, 255, 255, 0.02); }
 
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-
-        thead { background: rgba(15, 23, 42, 0.8); border-bottom: 1px solid var(--glass-border); }
-        th { padding: 1.2rem 1.5rem; color: var(--text-muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #334155; display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 0.9rem; border: 2px solid var(--glass-border); }
         
-        tbody tr { transition: 0.2s; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        tbody tr:last-child { border-bottom: none; }
-        tbody tr:hover { background: rgba(99, 102, 241, 0.05); } /* Hover sutil índigo */
+        /* Badges de Rol */
+        .role-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .role-admin { background: rgba(168, 85, 247, 0.2); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.3); }
+        .role-vendedor { background: rgba(99, 102, 241, 0.2); color: #c7d2fe; border: 1px solid rgba(99, 102, 241, 0.3); }
 
-        td { padding: 1.2rem 1.5rem; vertical-align: middle; color: var(--text-main); font-size: 0.95rem; }
-
-        /* Componentes de la Celda */
-        .user-cell { display: flex; align-items: center; gap: 15px; }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.1); }
-        .user-info h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 2px; }
-        .user-info span { font-size: 0.8rem; color: var(--text-muted); display: block; }
-
-        /* Badges (Etiquetas) */
-        .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
-        .badge-dot { width: 6px; height: 6px; border-radius: 50%; }
-        
-        /* Colores de Roles */
-        .role-admin { background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.2); }
-        .role-editor { background: rgba(6, 182, 212, 0.15); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.2); }
-        .role-viewer { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.2); }
-
-        /* Estado */
-        .status-active { color: var(--success); background: rgba(34, 197, 94, 0.1); padding: 4px 10px; border-radius: 6px; }
-        .status-offline { color: var(--text-muted); background: rgba(148, 163, 184, 0.1); padding: 4px 10px; border-radius: 6px; }
-
-        /* Acciones */
-        .actions-cell { display: flex; gap: 10px; justify-content: flex-end; opacity: 0.7; transition: 0.2s; }
-        tr:hover .actions-cell { opacity: 1; }
-        
-        .action-btn {
-            width: 32px; height: 32px; border-radius: 8px; border: none; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; transition: 0.2s;
-            background: transparent; color: var(--text-muted);
+        .delete-btn {
+            background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: var(--danger);
+            width: 32px; height: 32px; border-radius: 8px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;
         }
-        .action-btn:hover { background: rgba(255,255,255,0.1); color: white; }
-        .delete-btn:hover { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+        .delete-btn:hover { background: var(--danger); color: white; }
 
-        /* Paginación */
-        .pagination { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-top: 1px solid var(--glass-border); }
-        .page-info { font-size: 0.9rem; color: var(--text-muted); }
-        .page-btns { display: flex; gap: 5px; }
-        .page-btn {
-            padding: 6px 12px; border: 1px solid var(--glass-border); background: transparent;
-            color: var(--text-muted); border-radius: 8px; cursor: pointer; transition: 0.2s;
+        /* Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: 0.3s; z-index: 100;
         }
-        .page-btn:hover, .page-btn.active { background: var(--glass-border); color: white; border-color: rgba(255,255,255,0.2); }
-
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal { background: #1e293b; padding: 2.5rem; border-radius: 24px; width: 450px; border: 1px solid var(--glass-border); position: relative; }
+        
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; color: #94a3b8; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #334155; border-radius: 10px; color: white; outline: none;
+        }
+        .form-group input:focus, .form-group select:focus { border-color: var(--primary); }
     </style>
 </head>
 <body>
-    
-    <div style="position: absolute; filter: blur(120px); z-index: -1; opacity: 0.5; top: 10%; right: 30%; width: 500px; height: 500px; background: #6366f1;"></div>
 
     <aside class="sidebar">
         <div class="brand"><i class="ri-code-s-slash-line" style="color:var(--primary)"></i> INDIGO.dev</div>
         <nav class="nav-links">
             <a href="dashboard.html"><i class="ri-dashboard-line"></i> Dashboard</a>
             <a href="catalog.html"><i class="ri-store-2-line"></i> Tienda</a>
-            <a href="#" class="active"><i class="ri-user-3-line"></i> Usuarios</a> <a href="settings.html"><i class="ri-settings-4-line"></i> Configuración</a>
+            <a href="clients.html"><i class="ri-briefcase-4-line"></i> Clientes</a>
+            <a href="users.html" class="active"><i class="ri-user-3-line"></i> Usuarios</a>
+            <a href="settings.html"><i class="ri-settings-4-line"></i> Configuración</a>
             <a href="index.html" style="margin-top: auto; color: #ef4444"><i class="ri-logout-box-r-line"></i> Salir</a>
         </nav>
     </aside>
 
     <main class="main-content">
-        <div class="page-header">
-            <div class="page-title">
-                <h1>Gestión de Usuarios</h1>
-                <p>Administra permisos y accesos del equipo</p>
+        <div class="header">
+            <div>
+                <h1>Equipo</h1>
+                <p style="color: #94a3b8; margin-top: 5px;">Administra el acceso al sistema</p>
             </div>
-            <button class="add-btn"><i class="ri-add-line"></i> Agregar Usuario</button>
-        </div>
-
-        <div class="filters-bar">
-            <i class="ri-search-line" style="color: var(--text-muted); align-self: center;"></i>
-            <input type="text" class="search-input" placeholder="Buscar por nombre o email..." id="searchInput">
-            <select class="filter-select">
-                <option>Todos los roles</option>
-                <option>Admin</option>
-                <option>Editor</option>
-            </select>
+            <button class="btn-primary" onclick="openModal()">
+                <i class="ri-user-add-line"></i> Nuevo Usuario
+            </button>
         </div>
 
         <div class="table-container">
@@ -158,86 +109,148 @@
                 <thead>
                     <tr>
                         <th>Usuario</th>
+                        <th>Email</th>
                         <th>Rol</th>
-                        <th>Estado</th>
-                        <th>Último Acceso</th>
-                        <th style="text-align: right;">Acciones</th>
+                        <th>Fecha Registro</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="usersTableBody">
-                    </tbody>
+                <tbody id="usersBody">
+                    <tr><td colspan="5" style="text-align: center; padding: 3rem; color: #64748b;">Cargando equipo...</td></tr>
+                </tbody>
             </table>
-
-            <div class="pagination">
-                <span class="page-info">Mostrando 1-5 de 24 usuarios</span>
-                <div class="page-btns">
-                    <button class="page-btn"><i class="ri-arrow-left-s-line"></i></button>
-                    <button class="page-btn active">1</button>
-                    <button class="page-btn">2</button>
-                    <button class="page-btn">3</button>
-                    <button class="page-btn"><i class="ri-arrow-right-s-line"></i></button>
-                </div>
-            </div>
         </div>
     </main>
 
+    <div class="modal-overlay" id="userModal">
+        <div class="modal">
+            <button onclick="closeModal()" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 1.5rem;"><i class="ri-close-line"></i></button>
+            <h2 style="margin-bottom: 1.5rem;">Nuevo Miembro</h2>
+            <form id="createUserForm">
+                <div class="form-group">
+                    <label>Nombre Completo</label>
+                    <input type="text" id="uName" required placeholder="Ej. Admin Principal">
+                </div>
+                <div class="form-group">
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="uEmail" required placeholder="admin@kosari.com">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="uPass" required placeholder="******">
+                </div>
+                <div class="form-group">
+                    <label>Rol de Acceso</label>
+                    <select id="uRole">
+                        <option value="vendedor">Vendedor (Básico)</option>
+                        <option value="admin">Administrador (Total)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">Crear Usuario</button>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // DATOS DE EJEMPLO
-        const users = [
-            { name: "Sofía Martínez", email: "sofia@indigo.dev", role: "Admin", status: "Active", lastLogin: "Hace 2 min", img: "https://ui-avatars.com/api/?name=Sofia+M&background=6366f1&color=fff" },
-            { name: "Carlos Ruiz", email: "carlos@indigo.dev", role: "Editor", status: "Offline", lastLogin: "Ayer", img: "https://ui-avatars.com/api/?name=Carlos+R&background=06b6d4&color=fff" },
-            { name: "Ana P. López", email: "ana@cliente.com", role: "Viewer", status: "Active", lastLogin: "Hace 1 hora", img: "https://ui-avatars.com/api/?name=Ana+L&background=94a3b8&color=fff" },
-            { name: "Miguel Ángel", email: "migue@dev.com", role: "Editor", status: "Active", lastLogin: "Hace 5 min", img: "https://ui-avatars.com/api/?name=Miguel+A&background=06b6d4&color=fff" },
-            { name: "Laura Torres", email: "laura@design.com", role: "Viewer", status: "Offline", lastLogin: "Hace 3 días", img: "https://ui-avatars.com/api/?name=Laura+T&background=94a3b8&color=fff" }
-        ];
+        // CONFIGURACIÓN API
+        const API_URL = 'https://api-portfolio-indigo.onrender.com/api/users'; // TU API REAL
+        const tableBody = document.getElementById('usersBody');
 
-        const tableBody = document.getElementById('usersTableBody');
-
-        // Función para determinar clases CSS según datos
-        function getRoleBadge(role) {
-            if(role === 'Admin') return `<span class="badge role-admin"><span class="badge-dot" style="background:#818cf8"></span> Admin</span>`;
-            if(role === 'Editor') return `<span class="badge role-editor"><span class="badge-dot" style="background:#22d3ee"></span> Editor</span>`;
-            return `<span class="badge role-viewer"><span class="badge-dot" style="background:#cbd5e1"></span> Viewer</span>`;
+        // 1. CARGAR USUARIOS
+        async function loadUsers() {
+            try {
+                const res = await fetch(API_URL);
+                const users = await res.json();
+                renderTable(users);
+            } catch (error) {
+                console.error('Error:', error);
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ef4444;">Error de conexión 🔴</td></tr>';
+            }
         }
 
-        function getStatusBadge(status) {
-            if(status === 'Active') return `<span class="status-active">● Activo</span>`;
-            return `<span class="status-offline">○ Offline</span>`;
+        // 2. RENDERIZAR TABLA
+        function renderTable(data) {
+            tableBody.innerHTML = '';
+            
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem;">No hay usuarios registrados.</td></tr>';
+                return;
+            }
+
+            data.forEach(user => {
+                const initials = user.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                const roleClass = user.role === 'admin' ? 'role-admin' : 'role-vendedor';
+                const date = new Date(user.createdAt).toLocaleDateString();
+
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>
+                            <div class="user-info">
+                                <div class="avatar">${initials}</div>
+                                <span style="font-weight: 600;">${user.name}</span>
+                            </div>
+                        </td>
+                        <td style="color: #94a3b8;">${user.email}</td>
+                        <td><span class="role-badge ${roleClass}">${user.role}</span></td>
+                        <td style="color: #94a3b8;">${date}</td>
+                        <td>
+                            <button class="delete-btn" onclick="deleteUser('${user._id}')" title="Eliminar">
+                                <i class="ri-delete-bin-line"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
         }
 
-        // Renderizado
-        users.forEach((user, index) => {
-            const tr = document.createElement('tr');
-            // Animación de cascada
-            tr.style.animation = `fadeIn 0.5s ease forwards ${index * 100}ms`;
-            tr.style.opacity = '0'; // Inicio oculto para la animación
+        // 3. CREAR USUARIO
+        document.getElementById('createUserForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newUser = {
+                name: document.getElementById('uName').value,
+                email: document.getElementById('uEmail').value,
+                password: document.getElementById('uPass').value,
+                role: document.getElementById('uRole').value
+            };
 
-            tr.innerHTML = `
-                <td>
-                    <div class="user-cell">
-                        <img src="${user.img}" class="avatar" alt="${user.name}">
-                        <div class="user-info">
-                            <h4>${user.name}</h4>
-                            <span>${user.email}</span>
-                        </div>
-                    </div>
-                </td>
-                <td>${getRoleBadge(user.role)}</td>
-                <td>${getStatusBadge(user.status)}</td>
-                <td style="color: var(--text-muted); font-size: 0.9rem;">${user.lastLogin}</td>
-                <td>
-                    <div class="actions-cell">
-                        <button class="action-btn" title="Editar"><i class="ri-pencil-line"></i></button>
-                        <button class="action-btn delete-btn" title="Eliminar"><i class="ri-delete-bin-line"></i></button>
-                    </div>
-                </td>
-            `;
-            tableBody.appendChild(tr);
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newUser)
+                });
+
+                if (res.ok) {
+                    alert('¡Usuario creado! 👤');
+                    closeModal();
+                    document.getElementById('createUserForm').reset();
+                    loadUsers();
+                } else {
+                    alert('Error: Quizás el email ya existe.');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Error al conectar.');
+            }
         });
+
+        // 4. BORRAR USUARIO
+        async function deleteUser(id) {
+            if (!confirm('¿Seguro que quieres eliminar a este usuario?')) return;
+            try {
+                await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+                loadUsers();
+            } catch (error) {
+                alert('No se pudo eliminar.');
+            }
+        }
+
+        // MODAL
+        function openModal() { document.getElementById('userModal').classList.add('active'); }
+        function closeModal() { document.getElementById('userModal').classList.remove('active'); }
+
+        // INICIAR
+        loadUsers();
     </script>
-    
-    <style>
-        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(10px); } }
-    </style>
 </body>
 </html>

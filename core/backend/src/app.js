@@ -1,20 +1,22 @@
 const express = require('express');
 const cors = require('cors');
 
-// 1. Importar las rutas
+// 1. IMPORTAR RUTAS (Aquí estaba el error, faltaba la última línea)
 const productRoutes = require('./routes/productRoutes');
-const clientRoutes = require('./routes/clientRoutes'); // <--- NUEVO: Importamos rutas de clientes
+const clientRoutes = require('./routes/clientRoutes');
+const userRoutes = require('./routes/userRoutes'); 
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// 2. Usar las rutas
-app.use('/api/products', productRoutes); // Rutas de productos
-app.use('/api/clients', clientRoutes);   // <--- NUEVO: Rutas de clientes activadas
+// 2. USAR RUTAS
+app.use('/api/products', productRoutes); // Productos
+app.use('/api/clients', clientRoutes);   // Clientes
+app.use('/api/users', userRoutes);       // Usuarios
 
-// Ruta de prueba (la que ya tenías)
+// Ruta de prueba
 app.get('/', (req, res) => {
     res.json({ mensaje: "API Online 🚀" });
 });
