@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Punto de Venta (POS) - Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #0f172a; --glass-bg: rgba(30, 41, 59, 0.7);
+            --primary: #6366f1; --glass-border: rgba(255, 255, 255, 0.08);
+            --success: #22c55e; --danger: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg-dark); color: #f8fafc; font-family: 'Inter', sans-serif; height: 100vh; display: flex; overflow: hidden; }
+        h1, h2, h3 { font-family: 'Outfit', sans-serif; }
+
+        /* Sidebar */
+        .sidebar { width: 260px; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border-right: 1px solid var(--glass-border); padding: 2rem 1.5rem; display: flex; flex-direction: column; z-index: 10; }
+        .brand { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 700; margin-bottom: 3rem; color: white; }
+        .nav-links a { display: flex; align-items: center; gap: 12px; padding: 14px; color: #94a3b8; text-decoration: none; border-radius: 12px; margin-bottom: 8px; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { background: rgba(99, 102, 241, 0.15); color: white; }
+        .nav-links a.active i { color: var(--primary); }
+
+        /* Contenedor Principal dividido en 2 */
+        .pos-container { flex: 1; display: flex; height: 100%; }
+
+        /* Izquierda: Productos */
+        .products-section { flex: 1; padding: 2rem; overflow-y: auto; display: flex; flex-direction: column; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .search-box { background: rgba(30, 41, 59, 0.8); border: 1px solid var(--glass-border); padding: 10px 20px; border-radius: 50px; display: flex; align-items: center; gap: 10px; width: 300px; }
+        .search-box input { background: transparent; border: none; color: white; outline: none; width: 100%; }
+        
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.5rem; }
+        .product-card { 
+            background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 16px; 
+            padding: 1rem; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; text-align: center;
+        }
+        .product-card:hover { transform: translateY(-5px); border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
+        .product-card img { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
+        .product-price { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--success); font-size: 1.1rem; margin-top: 5px; }
+
+        /* Derecha: Ticket / Carrito */
+        .cart-section { width: 380px; background: rgba(15, 23, 42, 0.8); border-left: 1px solid var(--glass-border); padding: 2rem 1.5rem; display: flex; flex-direction: column; backdrop-filter: blur(10px); }
+        .cart-header { margin-bottom: 1.5rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 1rem; }
+        
+        .client-select { width: 100%; padding: 10px; background: rgba(30, 41, 59, 0.8); border: 1px solid var(--glass-border); border-radius: 10px; color: white; outline: none; margin-top: 10px; }
+        
+        .cart-items { flex: 1; overflow-y: auto; margin-bottom: 1rem; padding-right: 5px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 10px; margin-bottom: 10px; border: 1px solid var(--glass-border); }
+        .item-info h4 { font-size: 0.9rem; font-weight: 500; }
+        .item-info p { font-size: 0.8rem; color: #94a3b8; }
+        .item-actions { display: flex; align-items: center; gap: 10px; }
+        .qty-btn { background: rgba(255,255,255,0.1); border: none; color: white; width: 25px; height: 25px; border-radius: 5px; cursor: pointer; transition: 0.2s; }
+        .qty-btn:hover { background: var(--primary); }
+
+        .cart-footer { background: var(--glass-bg); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--glass-border); }
+        .total-row { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; font-family: 'Outfit', sans-serif; }
+        
+        .btn-pay {
+            width: 100%; background: var(--success); color: white; padding: 14px; border-radius: 12px;
+            border: none; cursor: pointer; font-weight: 700; font-size: 1.1rem; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.3s;
+        }
+        .btn-pay:hover { background: #16a34a; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(34, 197, 94, 0.3); }
+        .btn-pay:disabled { background: #475569; cursor: not-allowed; transform: none; box-shadow: none; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="brand"><i class="ri-code-s-slash-line" style="color:var(--primary)"></i> INDIGO.dev</div>
+        <nav class="nav-links">
+            <a href="dashboard.html"><i class="ri-dashboard-line"></i> Dashboard</a>
+            <a href="pos.html" class="active"><i class="ri-computer-line"></i> Punto de Venta</a>
+            <a href="catalog.html"><i class="ri-store-2-line"></i> Inventario</a>
+            <a href="clients.html"><i class="ri-briefcase-4-line"></i> Clientes</a>
+            <a href="users.html"><i class="ri-user-3-line"></i> Equipo</a>
+            <a href="settings.html"><i class="ri-settings-4-line"></i> Configuración</a>
+            <a href="index.html" style="margin-top: auto; color: #ef4444"><i class="ri-logout-box-r-line"></i> Salir</a>
+        </nav>
+    </aside>
+
+    <div class="pos-container">
+        <main class="products-section">
+            <div class="header">
+                <div>
+                    <h1>Terminal de Ventas</h1>
+                    <p style="color: #94a3b8;">Selecciona productos para armar el ticket</p>
+                </div>
+                <div class="search-box">
+                    <i class="ri-search-line" style="color: #64748b"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar producto...">
+                </div>
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+                <p style="color: #94a3b8;">Cargando productos...</p>
+            </div>
+        </main>
+
+        <aside class="cart-section">
+            <div class="cart-header">
+                <h2>Ticket Actual</h2>
+                <select id="clientSelect" class="client-select">
+                    <option value="">Consumidor Final (Sin registrar)</option>
+                    </select>
+            </div>
+
+            <div class="cart-items" id="cartItems">
+                <div style="text-align: center; color: #64748b; margin-top: 2rem;">
+                    <i class="ri-shopping-cart-2-line" style="font-size: 3rem; opacity: 0.5;"></i>
+                    <p>El carrito está vacío</p>
+                </div>
+            </div>
+
+            <div class="cart-footer">
+                <div class="total-row">
+                    <span>Total a Pagar:</span>
+                    <span id="cartTotal">$0.00</span>
+                </div>
+                <button class="btn-pay" id="btnPay" onclick="processSale()" disabled>
+                    <i class="ri-bank-card-line"></i> Cobrar
+                </button>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        const API_PRODUCTS = 'https://api-portfolio-indigo.onrender.com/api/products';
+        const API_CLIENTS = 'https://api-portfolio-indigo.onrender.com/api/clients';
+        const API_SALES = 'https://api-portfolio-indigo.onrender.com/api/sales';
+
+        let cart = []; // Aquí guardaremos los productos seleccionados
+        let allProducts = [];
+
+        // 1. CARGAR DATOS INICIALES
+        async function initPOS() {
+            await loadProducts();
+            await loadClients();
+        }
+
+        async function loadProducts(search = '') {
+            try {
+                const url = search ? `${API_PRODUCTS}?search=${encodeURIComponent(search)}` : API_PRODUCTS;
+                const res = await fetch(url);
+                allProducts = await res.json();
+                renderProducts();
+            } catch (error) {
+                document.getElementById('productsGrid').innerHTML = '<p style="color: #ef4444;">Error cargando productos.</p>';
+            }
+        }
+
+        async function loadClients() {
+            try {
+                const res = await fetch(API_CLIENTS);
+                const clients = await res.json();
+                const select = document.getElementById('clientSelect');
+                clients.forEach(c => {
+                    select.innerHTML += `<option value="${c._id}">${c.name}</option>`;
+                });
+            } catch (error) {
+                console.error("No se pudieron cargar los clientes");
+            }
+        }
+
+        // 2. RENDERIZAR PRODUCTOS
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            
+            if (allProducts.length === 0) {
+                grid.innerHTML = '<p style="color: #94a3b8; grid-column: 1/-1;">No hay productos disponibles.</p>';
+                return;
+            }
+
+            allProducts.forEach(p => {
+                // Solo mostrar si hay stock
+                if(p.stock > 0) {
+                    // Convertimos el objeto a un string seguro para pasarlo por la función onclick
+                    const productData = encodeURIComponent(JSON.stringify(p));
+                    grid.innerHTML += `
+                        <div class="product-card" onclick="addToCart('${productData}')">
+                            <img src="${p.image}" alt="${p.name}">
+                            <div style="font-weight: 600; font-size: 0.9rem;">${p.name}</div>
+                            <div style="font-size: 0.8rem; color: #94a3b8;">Stock: ${p.stock}</div>
+                            <div class="product-price">$${p.price}</div>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        // 3. LÓGICA DEL CARRITO
+        function addToCart(encodedProduct) {
+            const product = JSON.parse(decodeURIComponent(encodedProduct));
+            
+            // Buscar si ya está en el carrito
+            const existingItem = cart.find(item => item.product === product._id);
+
+            if (existingItem) {
+                if(existingItem.quantity < product.stock) {
+                    existingItem.quantity += 1;
+                } else {
+                    alert('¡No hay más stock disponible de este producto!');
+                }
+            } else {
+                // Agregar nuevo elemento
+                cart.push({
+                    product: product._id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: 1,
+                    maxStock: product.stock // Guardamos el stock maximo para validaciones
+                });
+            }
+            updateCartUI();
+        }
+
+        function changeQuantity(index, delta) {
+            const item = cart[index];
+            const newQty = item.quantity + delta;
+
+            if (newQty <= 0) {
+                cart.splice(index, 1); // Eliminar si llega a cero
+            } else if (newQty <= item.maxStock) {
+                item.quantity = newQty;
+            } else {
+                alert('Stock máximo alcanzado');
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cartItems');
+            const totalElement = document.getElementById('cartTotal');
+            const payBtn = document.getElementById('btnPay');
+
+            container.innerHTML = '';
+            let total = 0;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; color: #64748b; margin-top: 2rem;">
+                        <i class="ri-shopping-cart-2-line" style="font-size: 3rem; opacity: 0.5;"></i>
+                        <p>El carrito está vacío</p>
+                    </div>`;
+                totalElement.innerText = '$0.00';
+                payBtn.disabled = true;
+                return;
+            }
+
+            cart.forEach((item, index) => {
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <div class="item-info">
+                            <h4>${item.name}</h4>
+                            <p>$${item.price} x ${item.quantity} = <strong>$${subtotal}</strong></p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="qty-btn" onclick="changeQuantity(${index}, -1)">-</button>
+                            <span style="font-weight: 600;">${item.quantity}</span>
+                            <button class="qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            totalElement.innerText = `$${total}`;
+            payBtn.disabled = false;
+        }
+
+        // 4. PROCESAR VENTA (¡El momento mágico!)
+        async function processSale() {
+            const payBtn = document.getElementById('btnPay');
+            payBtn.disabled = true;
+            payBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Procesando...';
+
+            const clientId = document.getElementById('clientSelect').value;
+            let totalVenta = 0;
+            cart.forEach(item => totalVenta += (item.price * item.quantity));
+
+            const saleData = {
+                client: clientId || null, // Si no eligió, va null
+                items: cart,
+                total: totalVenta,
+                seller: "Admin" // TODO: En el futuro esto vendrá del Login
+            };
+
+            try {
+                const res = await fetch(API_SALES, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(saleData)
+                });
+
+                if (res.ok) {
+                    alert('✅ ¡Venta Procesada con Éxito!');
+                    // Limpiar carrito y recargar productos (para ver el nuevo stock)
+                    cart = [];
+                    updateCartUI();
+                    loadProducts(); 
+                } else {
+                    alert('Error al procesar la venta.');
+                }
+            } catch (error) {
+                alert('Error de conexión con el servidor.');
+            } finally {
+                payBtn.innerHTML = '<i class="ri-bank-card-line"></i> Cobrar';
+            }
+        }
+
+        // Buscador
+        document.getElementById('searchInput').addEventListener('input', (e) => loadProducts(e.target.value));
+
+        // Iniciar
+        initPOS();
+    </script>
+</body>
+</html>
