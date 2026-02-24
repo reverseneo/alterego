@@ -3,116 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Portfolio</title>
+    <title>Login - INDIGO.dev</title>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-dark: #0f172a; --glass-bg: rgba(30, 41, 59, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.08); --primary: #6366f1;
+            --bg-dark: #0f172a;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --primary: #6366f1;
+            --text-main: #f8fafc;
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg-dark); color: #f8fafc; height: 100vh; display: flex; overflow: hidden; }
 
-        .bg-shape { position: absolute; filter: blur(100px); z-index: -1; opacity: 0.5; animation: float 10s infinite; }
-        .shape-1 { top: -10%; left: -5%; width: 500px; height: 500px; background: #6366f1; }
-        
-        /* Sidebar */
-        .sidebar {
-            width: 260px; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px);
-            border-right: 1px solid var(--glass-border); padding: 2rem 1.5rem;
-            display: flex; flex-direction: column; z-index: 10;
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
         }
-        .brand { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 700; margin-bottom: 3rem; }
-        .nav-links a {
-            display: flex; align-items: center; gap: 12px; padding: 14px;
-            color: #94a3b8; text-decoration: none; border-radius: 12px; margin-bottom: 8px; transition: 0.3s;
-        }
-        .nav-links a:hover, .nav-links a.active { background: rgba(99, 102, 241, 0.15); color: white; }
 
-        /* Main */
-        .main-content { flex: 1; padding: 2rem; overflow-y: auto; position: relative; }
+        /* Fondo Animado */
+        .bg-shape {
+            position: absolute;
+            filter: blur(100px);
+            z-index: -1;
+            animation: float 10s infinite alternate;
+        }
+        .shape-1 { top: -10%; left: -5%; width: 500px; height: 500px; background: rgba(99, 102, 241, 0.4); }
+        .shape-2 { bottom: -10%; right: -5%; width: 400px; height: 400px; background: rgba(168, 85, 247, 0.4); animation-delay: -5s; }
+        @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(40px, 40px); } }
+
+        /* Tarjeta de Login */
+        .login-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .brand {
+            text-align: center;
+            font-size: 2rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .brand i { color: var(--primary); }
         
-        .header { display: flex; justify-content: space-between; margin-bottom: 2rem; align-items: center; }
-        .search { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 10px 20px; border-radius: 50px; width: 300px; display: flex; gap: 10px; color: #94a3b8; }
-        .search input { background: transparent; border: none; outline: none; color: white; width: 100%; }
-        
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .card { background: var(--glass-bg); padding: 1.5rem; border-radius: 20px; border: 1px solid var(--glass-border); }
-        .card h3 { color: #94a3b8; font-size: 0.9rem; margin-bottom: 0.5rem; }
-        .card .num { font-size: 2rem; font-weight: 700; }
-        
-        .chart-box { background: var(--glass-bg); padding: 1.5rem; border-radius: 20px; border: 1px solid var(--glass-border); height: 400px; position: relative; }
-        
-        @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(30px, 30px); } }
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 2.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            color: #64748b;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-login {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-login:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-login:disabled {
+            background: #475569;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .error-msg {
+            color: #ef4444;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            min-height: 20px;
+        }
     </style>
 </head>
 <body>
+
     <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
 
-    <aside class="sidebar">
-        <div class="brand"><i class="ri-code-s-slash-line" style="color:var(--primary)"></i> INDIGO.dev</div>
-        <nav class="nav-links">
-            <a href="dashboard.html" class="active"><i class="ri-dashboard-line"></i> Dashboard</a>
-            <a href="catalog.html"><i class="ri-store-2-line"></i> Catálogo</a>
-            <a href="#"><i class="ri-user-3-line"></i> Clientes</a>
-            <a href="index.html" style="margin-top: auto; color: #ef4444"><i class="ri-logout-box-r-line"></i> Salir</a>
-        </nav>
-    </aside>
-
-    <main class="main-content">
-        <div class="header">
-            <h2>Resumen General</h2>
-            <div class="search"><i class="ri-search-line"></i><input type="text" placeholder="Buscar..."></div>
+    <div class="login-card">
+        <div class="brand">
+            <i class="ri-code-s-slash-line"></i> INDIGO<span style="color: var(--primary);">.dev</span>
         </div>
+        <p class="subtitle">Ingresa tus credenciales para continuar</p>
 
-        <div class="stats-grid">
-            <div class="card">
-                <h3>Visitas Totales</h3>
-                <div class="num">24,500</div>
-                <div style="color: #22c55e; font-size: 0.8rem; margin-top: 5px;">▲ +12% vs mes pasado</div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Correo Electrónico</label>
+                <div class="input-wrapper">
+                    <i class="ri-mail-line"></i>
+                    <input type="email" id="emailInput" required placeholder="admin@indigo.com">
+                </div>
             </div>
-            <div class="card">
-                <h3>Ingresos</h3>
-                <div class="num">$8,400</div>
-                <div style="color: #22c55e; font-size: 0.8rem; margin-top: 5px;">▲ +5% vs mes pasado</div>
-            </div>
-            <div class="card">
-                <h3>Rendimiento</h3>
-                <div class="num">98%</div>
-                <div style="color: #22c55e; font-size: 0.8rem; margin-top: 5px;">● Sistema Estable</div>
-            </div>
-        </div>
 
-        <div class="chart-box">
-            <h3>Tráfico del Servidor (Tiempo Real)</h3>
-            <div style="height: 320px; width: 100%;">
-                <canvas id="trafficChart"></canvas>
+            <div class="form-group">
+                <label>Contraseña</label>
+                <div class="input-wrapper">
+                    <i class="ri-lock-line"></i>
+                    <input type="password" id="passwordInput" required placeholder="••••••••">
+                </div>
             </div>
-        </div>
-    </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <button type="submit" class="btn-login" id="loginBtn">
+                Ingresar <i class="ri-arrow-right-line"></i>
+            </button>
+            <div id="errorText" class="error-msg"></div>
+        </form>
+    </div>
+
     <script>
-        const ctx = document.getElementById('trafficChart').getContext('2d');
-        let gradient = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient.addColorStop(0, 'rgba(99, 102, 241, 0.5)');
-        gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Evita que la página recargue al enviar el formulario
+            
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            const btn = document.getElementById('loginBtn');
+            const errorText = document.getElementById('errorText');
 
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '23:59'],
-                datasets: [{
-                    label: 'Usuarios',
-                    data: [12, 19, 35, 25, 42, 45, 30],
-                    backgroundColor: gradient,
-                    borderColor: '#6366f1',
-                    fill: true, tension: 0.4
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#94a3b8' } }, y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } } } }
+            // Estado de carga visual
+            btn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Verificando...';
+            btn.disabled = true;
+            errorText.innerText = '';
+
+            try {
+                const res = await fetch('https://api-portfolio-indigo.onrender.com/api/users/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    // ¡Login exitoso! Guardamos los datos del usuario en el navegador
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    
+                    // Redirigimos al Dashboard
+                    window.location.href = 'dashboard.html';
+                } else {
+                    // Si el backend dice "Credenciales incorrectas"
+                    errorText.innerText = data.message;
+                    btn.innerHTML = 'Ingresar <i class="ri-arrow-right-line"></i>';
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                errorText.innerText = 'Error conectando al servidor. Verifica tu internet.';
+                btn.innerHTML = 'Ingresar <i class="ri-arrow-right-line"></i>';
+                btn.disabled = false;
+            }
         });
     </script>
 </body>
